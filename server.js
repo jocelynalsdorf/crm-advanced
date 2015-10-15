@@ -7,6 +7,7 @@ var express = require('express'); //call express
 var app = express(); //define app using express
 var bodyParser = require('body-parser');//get body-parser
 var morgan = require('morgan'); //used to see requests
+var mongoose = require('mongoose') //used to connect to database
 var port = process.env.PORT || 8080; //set the port for the app
 
 //APP CONFIGURATION ===========
@@ -55,6 +56,10 @@ app.use('/api', apiRouter);
 //start the server ==============
 app.listen(port);
 console.log('Magic happens on port ' + port);
+
+//connect to database 
+
+mongoose.connect('mongodb://project1:project1@apollo.modulusmongo.net:27017/U2xysiro');
 
 
 
