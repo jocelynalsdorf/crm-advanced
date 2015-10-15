@@ -5,6 +5,7 @@
 
 var express = require('express'); //call express
 var app = express(); //define app using express
+var User = require('./app/models/user'); //pull in our UserSchema model
 var bodyParser = require('body-parser');//get body-parser
 var morgan = require('morgan'); //used to see requests
 var mongoose = require('mongoose') //used to connect to database
