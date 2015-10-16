@@ -107,6 +107,26 @@ apiRouter.route('/users/:user_id')
       res.json(user);
     });
   })
+   //update user with this id
+  .put(function(req, res){
+    User.findById(req.params.user_id, function(err, user){
+      //handle the error
+      if(err) res.send(err);
+
+      //update user info only if its new
+      if (req.body.name) user.name = req.body.name;
+      if (req.body.username) user.username = req.body.username;
+      if (req.body.password) user.password = req.body.password;
+
+      //save the user
+      user.save(function(err){
+        if (err) res.send(err);
+        //return a message
+        res.json({message: 'User updated'});
+      });
+    });
+    
+  })
 
 
 
