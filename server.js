@@ -84,6 +84,15 @@ apiRouter.route('/users')
 
       res.json({message: 'User created'});
     });
+  })
+  //get all the users from /api/users
+  .get(function(req,res){
+    User.find(function(err, users){
+      if(err) res.send(err);
+
+      //return the users
+      res.json(users);
+    });
   });
 
 
