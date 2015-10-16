@@ -95,6 +95,20 @@ apiRouter.route('/users')
     });
   });
 
+//routes that end in user/:user_id ==========
+
+apiRouter.route('/users/:user_id')
+//get user with the id
+  .get(function(req, res){
+    User.findById(req.params.user_id, function(err, user){
+      //handle the error
+      if (err) res.send(err);
+      //return that user if no error
+      res.json(user);
+    });
+  })
+
+
 
 app.use('/api', apiRouter);
 
