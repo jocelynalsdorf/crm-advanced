@@ -101,9 +101,9 @@ apiRouter.route('/users/:user_id')
 //get user with the id
   .get(function(req, res){
     User.findById(req.params.user_id, function(err, user){
-      //handle the error
+      //handle any errors
       if (err) res.send(err);
-      //return that user if no error
+      //return that user if no error is thrown
       res.json(user);
     });
   })
