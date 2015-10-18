@@ -10,6 +10,8 @@ var bodyParser = require('body-parser');//get body-parser
 var morgan = require('morgan'); //used to see requests
 var mongoose = require('mongoose') //used to connect to database
 var port = process.env.PORT || 8080; //set the port for the app
+var jwt = require('jsonwebtoken');
+var superSecret = 'ilovescotchscotchyscotchscotch';
 
 //APP CONFIGURATION ===========
 //middleware
@@ -39,6 +41,46 @@ app.get('/', function(req, res){
 
 //get an instance of the express router to use as a base route
 var apiRouter = express.Router();
+
+//add route for authentication and place BEFORE middleware @ http://localhost:8000/api/authenticate
+apiRouter.post('/authenticate', function(req,res){
+  User.findOne({
+    username: req.body.username
+  }).select('name username password').exec(function(err,user){
+    if(err) throw err;
+    //if no user is found do this
+    if(!user) {
+      res.json({
+        success: false,
+        message: 'Authentication failed. user not found.'
+      });
+      //is user is found do this
+    } else if (user) {
+      //check if password matches
+      var validPassword = user.comparePassword(req.body.password);
+      if (!validPassword) {
+        res.json({
+          success:false,
+          message: 'Authentication failed.wrong password.'
+        });
+      } else {
+        //if user is found and password is right create a token
+        var token = jwt.sign({
+          name: user.name,
+          username: user.username
+        }, superSecret, {
+          expiresInMinutes: 1440 //24 hours
+        });
+        //return the information including token as json
+        res.json({
+          success: true,
+          message: 'Enjoy your token!',
+          token: token
+        });
+      }
+    }
+  })
+});
 
 //middleware to use for all requests
 apiRouter.use(function(req, res, next){
