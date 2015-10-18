@@ -201,6 +201,10 @@ apiRouter.route('/users/:user_id')
     });
   });
 
+//adds endpoint to get user information so we can store users info
+apiRouter.get('/me', function(req,res){
+  res.send(req.decoded);
+});
 
 app.use('/api', apiRouter);
 
