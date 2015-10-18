@@ -84,12 +84,35 @@ apiRouter.post('/authenticate', function(req,res){
 
 //middleware to use for all requests
 apiRouter.use(function(req, res, next){
-  //do logging here
-  console.log('Somebody just came to my app');
+ //route middleware to verigy a token
 
-  //here is where I will add more middleware and authenticate users
-  ////call next so it goes to next peive of middleware
-  next();
+  //check header or url parameteres of post parameters for token
+  var token = req.body.token || req.query.token || req.headers['x-access-token'];
+//decode the token
+  if(token) {
+    //verify secret and checks expiration
+    jwt.verify(token, superSecret, function(err, decoded){
+      //create message in callback
+      if (err) {
+        return res.status(403).send({
+          success: false,
+          message: 'Failed to authenticate token'
+        });
+      } else {
+        //if everything is ok, save to request for use in other routes
+        req.decoded = decoded;
+        //next is now here so that the user only continue on if there is successful authentication
+        next();
+      }
+    });
+  } else {
+    //if there is no token return an HTTP response of 403(access forbidden) $ error message
+    return res.status(403).send({
+      success: false,
+      message: 'No token provided'
+    });
+  }
+
 });
 
 
