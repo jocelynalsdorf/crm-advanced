@@ -42,7 +42,9 @@ app.use(express.static(__dirname + '/public'));
 var apiRoutes = require('./app/routes/api')(app,express);
 app.use('/api', apiRoutes);
 
-//basic catchall route for angular to handle that sends users to frontend -has ot be after api routes
+
+
+//basic catchall route for angular to handle that sends users to frontend -has to be after api routes
 app.get('*', function(req, res){
   res.sendFile(path.join(__dirname + '/public/app/views/index.html'));
 });

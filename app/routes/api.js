@@ -89,6 +89,10 @@ apiRouter.get('/', function(req, res){
   res.json({message: 'Hoorray! Welcome to our api'});
 });
 
+//adds endpoint to get user information so we can store users info
+apiRouter.get('/me', function(req,res){
+  res.send(req.decoded);
+});
 
 //routes that end in /users access at ========
 

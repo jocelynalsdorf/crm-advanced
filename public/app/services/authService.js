@@ -13,18 +13,46 @@ angular.module('authService', [])
   var authFactory = {};
 
   //handle login
-  
+  authFactory.login = function(username, password) {
+    //return the promise object and its data
+    return $http.post('/api/authenticate', {
+      username: username,
+      password: password
+    })
+    .success(function(data){
+      AuthToken.settoken(data.token);
+      return data;
+    });
+  };
 
-  //handle logout
+  //handle logout by clearing the token
+    authFactory.logout = function() {
+      //clear the token
+      AuthToken.setToken();
+    };
   
-  //check is user is logged in
+  //check is user is logged in, checks for a local token
+  authFactory.isLoggedIn = function(){
+    if(AuthToken.getToken())
+      return true;
+    else
+      return false;
+  };
   
-  //get the user info
-  
+  //get the loggedin user info
+  authFactory.getUser = function() {
+    if (AuthToken.getToken())
+      return $http.get('/api/me', {cache: true});
+    else
+      return $q.reject({message: 'User has no token'});
+  };
+
   //return factory object
   return authFactory;
 
 })
+
+
 //========
 //factory for handling tokens
 //inject $window to store token client-side
@@ -33,25 +61,56 @@ angular.module('authService', [])
 .factory('AuthToken', function($window){
   var authTokenFactory = {};
 
-  //get the token
-  //set the token or clear the token
+  //get the token out of local storage
+  authTokenFactory.getToken = function(){
+    return $window.localStorage.getItem('token');
+  };
+
+  //set the token if passed or clear the token if no token
+  authTokenFactory.setToken = function(){
+    if(token)
+      $window.localStorage.setItem('token', token);
+    else
+      $window.localStorage.removeItem('token');
+  };
+
+  //return factory
   return authTokenFactory;
 })
+
 
 //======
 //application configuration to integrate token into requests
 //======
 
-.factory('AuthInterceptor', function($g, AuthToken){
+.factory('AuthInterceptor', function($g, $location, AuthToken){
   var interceptorFactory = {};
 
-  //attach the token to every request
-  
-  //redirect if a token doesnt authenticate
-  
+  //attach the token to every http request
+  interceptorFactory.request = function(config){
+    //grab the token
+    var token = AuthToken.getToken();
+    if(token)
+      config.headers['x-access-token'] = token;
+    return config;
+  };
+
+  //happens if response errors
+  interceptorFactory.responseError = function(response) {
+    //if server returns a 403
+    if (response.status == 403) {
+      //AuthToken.setToken();
+      $location.path('/login');
+    }
+    //return the errors from the server as a promise
+    return $q.reject(response);
+  };
+
   return interceptorFactory;
 
-})
+  
+
+});
 
 
 
