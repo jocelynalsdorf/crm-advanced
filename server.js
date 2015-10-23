@@ -11,6 +11,7 @@ var morgan = require('morgan'); //used to see requests
 var mongoose = require('mongoose') //used to connect to database
 var port = process.env.PORT || 8080; //set the port for the app
 var jwt = require('jsonwebtoken');
+var config = require('./config');
 var superSecret = 'ilovescotchscotchyscotchscotch';
 
 //APP CONFIGURATION ===========
@@ -209,12 +210,12 @@ apiRouter.get('/me', function(req,res){
 app.use('/api', apiRouter);
 
 //start the server ==============
-app.listen(port);
-console.log('Magic happens on port ' + port);
+app.listen(config.port);
+console.log('Magic happens on port ' + config.port);
 
 //connect to database 
 
-mongoose.connect('mongodb://project1:project1@apollo.modulusmongo.net:27017/U2xysiro');
+mongoose.connect(config.database);
 
 
 
