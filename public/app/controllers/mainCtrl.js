@@ -2,7 +2,7 @@ angular.module('mainCtrl', [])
 
 .controller('mainController', function($rootScope, $location, Auth) {
   var vm = this;
-
+console.log(Auth);
   //get info if a person is logged
   vm.loggedIn = Auth.isLoggedIn();
 
