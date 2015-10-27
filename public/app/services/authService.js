@@ -6,6 +6,30 @@ angular.module('authService', [])
 //inject $q to return promise objects
 //inject AuthToken to manage tokens
 //=======
+//========
+//factory for handling tokens
+//inject $window to store token client-side
+//========
+
+.factory('AuthToken', function($window){
+  var authTokenFactory = {};
+
+  //get the token out of local storage
+  authTokenFactory.getToken = function(){
+    return $window.localStorage.getItem('token');
+  };
+
+  //set the token if passed or clear the token if no token
+  authTokenFactory.setToken = function(){
+    if(token)
+      $window.localStorage.setItem('token', token);
+    else
+      $window.localStorage.removeItem('token');
+  };
+
+  //return factory
+  return authTokenFactory;
+})
 
 .factory('Auth', function($http, $q, AuthToken){
 //create auth factory object
@@ -53,30 +77,6 @@ angular.module('authService', [])
 })
 
 
-//========
-//factory for handling tokens
-//inject $window to store token client-side
-//========
-
-.factory('AuthToken', function($window){
-  var authTokenFactory = {};
-
-  //get the token out of local storage
-  authTokenFactory.getToken = function(){
-    return $window.localStorage.getItem('token');
-  };
-
-  //set the token if passed or clear the token if no token
-  authTokenFactory.setToken = function(){
-    if(token)
-      $window.localStorage.setItem('token', token);
-    else
-      $window.localStorage.removeItem('token');
-  };
-
-  //return factory
-  return authTokenFactory;
-})
 
 
 //======
@@ -99,7 +99,7 @@ angular.module('authService', [])
   interceptorFactory.responseError = function(response) {
     //if server returns a 403
     if (response.status == 403) {
-      AuthToken.setToken();
+      // AuthToken.setToken();
       $location.path('/login');
     }
     //return the errors from the server as a promise

@@ -22,12 +22,17 @@ angular.module('mainCtrl', ['authService', 'userService'])
   vm.doLogin = function() {
     //for processing icon
     vm.processing = true;
+    //clear the error
+     vm.error = '';
     //call the Auth.login() function
     Auth.login(vm.loginData.username, vm.loginData.password)
     .success(function(data){
       vm.processing = false;
+      if(data.success)
       //if a user succesfully logs in redirect to users page
       $location.path('/users');
+      else
+        vm.error = data.message;
     });
   };
 

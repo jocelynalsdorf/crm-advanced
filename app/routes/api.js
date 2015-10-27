@@ -14,7 +14,7 @@ apiRouter.post('/authenticate', function(req,res){
   //select the password sincemongoose is not returning it by default
   User.findOne({
     username: req.body.username
-  }).select('password').exec(function(err,user){
+  }).select('name username password').exec(function(err,user){
     if(err) throw err;
     //if no user is found do this
     if(!user) {
@@ -33,8 +33,11 @@ apiRouter.post('/authenticate', function(req,res){
         });
       } else {
         //if user is found and password is right create a token
-        var token = jwt.sign(user, superSecret, {
-          expiresInMinutes: 1440 //24 hours
+        var token = jwt.sign({
+          name: user.name,
+          username: user.username
+        }, superSecret, {
+          expiresIn: 34341440 //24 hours
         });
 
         //return the information including token as json
@@ -53,8 +56,11 @@ apiRouter.use(function(req, res, next){
   console.log('someone just arrived at our app');
 
   //check header or url parameteres of post parameters for token
-  var token = req.body.token || req.query.token || req.headers['x-access-token'];
-
+ var token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiam9zcyIsInVzZXJuYW1lIjoiYm9zc3kiLCJpYXQiOjE0NDU5NzY2MzksImV4cCI6MTQ0NjA2MzAzOX0.S92zK_9tWG3TdqJOmNHgM7JtcFPQjnITbNLPrJ8qFUE";
+ 
+  // unable to store token in local storage so having to set it manually
+  //var token = req.body.token || req.query.token || req.headers['x-access-token'];
+console.log(req.headers['x-access-token']);
 //decode the token
   if(token) {
 

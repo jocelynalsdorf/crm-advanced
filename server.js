@@ -10,6 +10,8 @@ var morgan = require('morgan'); //used to see requests
 var mongoose = require('mongoose') //used to connect to database
 var config = require('./config');
 var path = require('path');
+//see if this helps
+var jwt = require('jsonwebtoken');
 
 //APP CONFIGURATION ===========
 //
@@ -22,7 +24,7 @@ app.use(bodyParser.json());
 app.use(function(req, res, next){
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
-  res.setHeader('Access-COntrol-Allow-Headers', 'X-Requested-With,content-type,Authorization');
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,Authorization');
   next();
 });
 
