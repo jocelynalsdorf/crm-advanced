@@ -6,7 +6,7 @@ angular.module('userCtrl', ['userService'])
   //set a processing variable to show loading things
   vm.processing = true;
 
-  vm.deleteUser =function(id) {
+  vm.deleteUser = function(id) {
     vm.processing = true;
     //accepts the user id as a parameter
     User.delete(id)
@@ -51,7 +51,36 @@ angular.module('userCtrl', ['userService'])
       });
   };
 
-});
+})
+.controller('userEditController', function($routeParams, User){
+  var vm = this;
+  //var to hide/show elements of the view and differentiate between create or edit pg
+  vm.type =  'edit';
+
+  //get the user data for the user you want to edit/ use $routeParams to grab data from url
+  User.get($routeParams.user_id)
+  .success(function(data){
+    vm.userData = data;
+  });
+
+  //function to save the user
+  vm.saveUser = function() {
+    vm.processing = true;
+    vm.message = '';
+
+    //call the userService update function
+    User.update($routeParams.user_id, vm.userData) 
+      .success(function(data){
+        vm.processing = false;
+        //clear the form
+        vm.userData = {};
+        //bind the message from our API to vm.message
+        vm.message = data.message;
+
+      });
+    
+  };
+})
 
 
 

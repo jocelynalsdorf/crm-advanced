@@ -19,12 +19,18 @@ angular.module('app.routes', ['ngRoute'])
     controller: 'userController',
     controllerAs: 'user'
   })
+//creat a new user
   .when('/users/create', {
     templateUrl: 'app/views/pages/users/single.html',
     controller: 'userCreateController',
     controllerAs: 'user'
-
   })
+//edit a user
+  .when('/users/:user_id', {
+    templateUrl: 'app/views/pages/users/single.html',
+    controller: 'userEditController',
+    controllerAs: 'user'
+  });
 
   //get rid of the hash in url
   $locationProvider.html5Mode(true);
