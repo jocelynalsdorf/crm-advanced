@@ -1,8 +1,9 @@
-angular.module('mainCtrl', [])
+angular.module('mainCtrl', ['authService', 'userService'])
 
-.controller('mainController', function($rootScope, $location, Auth) {
+.controller('mainController', function($rootScope, $location, Auth, AuthToken) {
   var vm = this;
-console.log(Auth);
+
+
   //get info if a person is logged
   vm.loggedIn = Auth.isLoggedIn();
 

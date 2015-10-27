@@ -14,7 +14,7 @@ apiRouter.post('/authenticate', function(req,res){
   //select the password sincemongoose is not returning it by default
   User.findOne({
     username: req.body.username
-  }).select('name username password').exec(function(err,user){
+  }).select('password').exec(function(err,user){
     if(err) throw err;
     //if no user is found do this
     if(!user) {

@@ -20,7 +20,7 @@ angular.module('authService', [])
       password: password
     })
     .success(function(data){
-      AuthToken.settoken(data.token);
+      AuthToken.setToken(data.token);
       return data;
     });
   };
@@ -83,7 +83,7 @@ angular.module('authService', [])
 //application configuration to integrate token into requests
 //======
 
-.factory('AuthInterceptor', function($g, $location, AuthToken){
+.factory('AuthInterceptor', function($q, $location, AuthToken){
   var interceptorFactory = {};
 
   //attach the token to every http request
@@ -99,7 +99,7 @@ angular.module('authService', [])
   interceptorFactory.responseError = function(response) {
     //if server returns a 403
     if (response.status == 403) {
-      //AuthToken.setToken();
+      AuthToken.setToken();
       $location.path('/login');
     }
     //return the errors from the server as a promise
