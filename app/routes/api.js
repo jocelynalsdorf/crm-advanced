@@ -37,7 +37,7 @@ apiRouter.post('/authenticate', function(req,res){
           name: user.name,
           username: user.username
         }, superSecret, {
-          expiresIn: 34341440 //24 hours
+          expiresIn: 435699886443223564334341440 //seconds
         });
 
         //return the information including token as json
